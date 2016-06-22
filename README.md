@@ -1,1 +1,0 @@
-# pagerduty-events-api
