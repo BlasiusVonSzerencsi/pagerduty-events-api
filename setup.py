@@ -8,4 +8,6 @@ setup(name='pagerduty_events_api',
       author_email='balazs.szerencsi@icloud.com',
       license='MIT',
       packages=['pagerduty_events_api'],
-      zip_safe=False)
+      zip_safe=False,
+      test_suite='nose.collector',
+      tests_require=['nose'])
