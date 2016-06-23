@@ -1,6 +1,8 @@
 import json
 import requests
 
+from pagerduty_events_api.pagerduty_incident import PagerdutyIncident
+
 
 class PagerdutyService:
     def __init__(self, key):
@@ -14,5 +16,9 @@ class PagerdutyService:
                    'event_type': 'trigger',
                    'description': description}
 
-        requests.post('https://events.pagerduty.com/generic/2010-04-15/create_event.json',
-                      json.dumps(payload))
+        response = requests.post('https://events.pagerduty.com/generic/2010-04-15/create_event.json',
+                                 json.dumps(payload))
+
+        incident_data = json.loads(response.text)
+
+        return PagerdutyIncident(self.__service_key, incident_data['incident_key'])

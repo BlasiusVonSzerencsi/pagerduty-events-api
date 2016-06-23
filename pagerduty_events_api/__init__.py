@@ -1,1 +1,2 @@
+from pagerduty_events_api.pagerduty_incident import PagerdutyIncident
 from pagerduty_events_api.pagerduty_service import PagerdutyService
