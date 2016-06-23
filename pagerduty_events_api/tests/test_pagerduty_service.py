@@ -10,16 +10,18 @@ from pagerduty_events_api import PagerdutyIncident
 
 
 class TestPagerdutyService(TestCase):
-    def test_get_service_key_should_return_the_service_key(self):
-        subject = PagerdutyService('my_service_key')
+    def setUp(self):
+        super().setUp()
+        self.__subject = PagerdutyService('my_service_key')
 
-        self.assertEqual('my_service_key', subject.get_service_key())
+    def test_get_service_key_should_return_the_service_key(self):
+        self.assertEqual('my_service_key', self.__subject.get_service_key())
 
     def test_trigger_should_make_pagerduty_api_call(self):
         response = Mock(text='{"incident_key": "my_incident_key"}')
         requests.post = MagicMock(return_value=response)
 
-        PagerdutyService('my_service_key').trigger('some_description')
+        self.__subject.trigger('some_description')
 
         requests.post.assert_called_once_with('https://events.pagerduty.com/generic/2010-04-15/create_event.json',
                                               json.dumps({'service_key': 'my_service_key',
@@ -30,7 +32,7 @@ class TestPagerdutyService(TestCase):
         response = Mock(text='{"incident_key": "my_incident_key"}')
         requests.post = MagicMock(return_value=response)
 
-        incident = PagerdutyService('my_service_key').trigger('some_description')
+        incident = self.__subject.trigger('some_description')
 
         self.assertIsInstance(incident, PagerdutyIncident)
 
@@ -38,7 +40,7 @@ class TestPagerdutyService(TestCase):
         response = Mock(text='{"incident_key": "my_incident_key"}')
         requests.post = MagicMock(return_value=response)
 
-        incident = PagerdutyService('my_service_key').trigger('some_description')
+        incident = self.__subject.trigger('some_description')
 
         self.assertEqual('my_service_key', incident.get_service_key())
         self.assertEqual('my_incident_key', incident.get_incident_key())
