@@ -8,10 +8,10 @@ from pagerduty_events_api import PagerdutyService
 
 
 class TestPagerdutyService(TestCase):
-    def test_get_key_should_return_the_service_key(self):
+    def test_get_service_key_should_return_the_service_key(self):
         subject = PagerdutyService('my_service_key')
 
-        self.assertEqual('my_service_key', subject.get_key())
+        self.assertEqual('my_service_key', subject.get_service_key())
 
     def test_trigger_should_make_pagerduty_api_call(self):
         requests.post = MagicMock()

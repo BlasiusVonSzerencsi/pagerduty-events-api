@@ -4,13 +4,13 @@ import requests
 
 class PagerdutyService:
     def __init__(self, key):
-        self.__key = key
+        self.__service_key = key
 
-    def get_key(self):
-        return self.__key
+    def get_service_key(self):
+        return self.__service_key
 
     def trigger(self, description):
-        payload = {'service_key': self.__key,
+        payload = {'service_key': self.__service_key,
                    'event_type': 'trigger',
                    'description': description}
 
