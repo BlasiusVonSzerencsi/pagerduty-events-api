@@ -1,5 +1,4 @@
-import json
-import requests
+from pagerduty_events_api.pagerduty_rest_client import PagerdutyRestClient
 
 
 class PagerdutyIncident:
@@ -18,5 +17,4 @@ class PagerdutyIncident:
                    'event_type': 'acknowledge',
                    'incident_key': self.__incident_key}
 
-        requests.post('https://events.pagerduty.com/generic/2010-04-15/create_event.json',
-                      json.dumps(payload))
+        PagerdutyRestClient().post(payload)

@@ -3,6 +3,7 @@ import requests
 
 from unittest import TestCase
 from unittest.mock import MagicMock
+from unittest.mock import Mock
 
 from pagerduty_events_api import PagerdutyIncident
 
@@ -19,7 +20,7 @@ class TestPagerdutyIncident(TestCase):
         self.assertEqual('my_incident_key', self.__subject.get_incident_key())
 
     def test_acknowledge_should_make_pagerduty_api_call(self):
-        requests.post = MagicMock()
+        requests.post = MagicMock(return_value=Mock(text='{}'))
 
         self.__subject.acknowledge()
 
