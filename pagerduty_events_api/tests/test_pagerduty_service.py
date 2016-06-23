@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 from pagerduty_events_api import PagerdutyService
 
 
-class TestPagerduty(TestCase):
+class TestPagerdutyService(TestCase):
     def test_get_key_should_return_the_service_key(self):
         subject = PagerdutyService('my_service_key')
 
