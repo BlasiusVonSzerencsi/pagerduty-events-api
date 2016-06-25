@@ -5,9 +5,10 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 from unittest.mock import Mock
 
-from pagerduty_events_api.pagerduty_rest_client import PagerdutyRestClient
-from pagerduty_events_api.pagerduty_rest_client import PagerdutyNotFoundException
 from pagerduty_events_api.pagerduty_rest_client import PagerdutyBadRequestException
+from pagerduty_events_api.pagerduty_rest_client import PagerdutyForbiddenException
+from pagerduty_events_api.pagerduty_rest_client import PagerdutyNotFoundException
+from pagerduty_events_api.pagerduty_rest_client import PagerdutyRestClient
 
 
 class TestPagerdutyRestClient(TestCase):
@@ -48,4 +49,13 @@ class TestPagerdutyRestClient(TestCase):
         requests.post = MagicMock(return_value=response)
 
         with self.assertRaises(PagerdutyBadRequestException):
+            self.__subject.post({})
+
+    def test_post_should_raise_pagerduty_forbidden_error_on_403(self):
+        response = Mock(status_code=403,
+                        content=json.dumps({'message': 'Forbidden',
+                                            'errors': ['Too many requests please try again later']}))
+        requests.post = MagicMock(return_value=response)
+
+        with self.assertRaises(PagerdutyForbiddenException):
             self.__subject.post({})

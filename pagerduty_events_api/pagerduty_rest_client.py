@@ -10,6 +10,10 @@ class PagerdutyBadRequestException(PagerdutyException):
     pass
 
 
+class PagerdutyForbiddenException(PagerdutyException):
+    pass
+
+
 class PagerdutyNotFoundException(PagerdutyException):
     pass
 
@@ -22,6 +26,10 @@ class PagerdutyRestClient:
         if response.status_code == 400:
             error_content = json.loads(response.content)
             raise PagerdutyBadRequestException(error_content['message'])
+
+        if response.status_code == 403:
+            error_content = json.loads(response.content)
+            raise PagerdutyForbiddenException(error_content['message'])
 
         if response.status_code == 404:
             raise PagerdutyNotFoundException('Could not find PagerDuty endpoint.')
