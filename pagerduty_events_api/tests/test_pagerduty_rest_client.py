@@ -13,7 +13,7 @@ class TestPagerdutyRestClient(TestCase):
         super().setUp()
         self.__subject = PagerdutyRestClient()
 
-    def test_trigger_should_make_pagerduty_api_call(self):
+    def test_post_should_make_pagerduty_api_call(self):
         response = Mock(text='{}')
         requests.post = MagicMock(return_value=response)
 
@@ -24,7 +24,7 @@ class TestPagerdutyRestClient(TestCase):
                                               json.dumps({'some_key': 'some_value',
                                                           'another_key': 'another_value'}))
 
-    def test_trigger_should_return_the_json_parsed_reponse_text(self):
+    def test_post_should_return_the_json_parsed_reponse_text(self):
         response = Mock(text='{"response_key": "response_value"}')
         requests.post = MagicMock(return_value=response)
 
