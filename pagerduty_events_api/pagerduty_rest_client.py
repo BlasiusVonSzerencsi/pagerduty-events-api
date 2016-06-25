@@ -14,6 +14,10 @@ class PagerdutyForbiddenException(PagerdutyException):
     pass
 
 
+class PagerdutyServerErrorException(PagerdutyException):
+    pass
+
+
 class PagerdutyNotFoundException(PagerdutyException):
     pass
 
@@ -32,6 +36,9 @@ class PagerdutyRestClient:
             raise PagerdutyForbiddenException(error_content['message'])
 
         if response.status_code == 404:
-            raise PagerdutyNotFoundException('Could not find PagerDuty endpoint.')
+            raise PagerdutyNotFoundException('Could not find PagerDuty endpoint')
+
+        if 500 <= response.status_code < 600:
+            raise PagerdutyServerErrorException('Internal server error')
 
         return json.loads(response.text)

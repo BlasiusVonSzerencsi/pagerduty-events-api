@@ -7,6 +7,7 @@ from unittest.mock import Mock
 
 from pagerduty_events_api.pagerduty_rest_client import PagerdutyBadRequestException
 from pagerduty_events_api.pagerduty_rest_client import PagerdutyForbiddenException
+from pagerduty_events_api.pagerduty_rest_client import PagerdutyServerErrorException
 from pagerduty_events_api.pagerduty_rest_client import PagerdutyNotFoundException
 from pagerduty_events_api.pagerduty_rest_client import PagerdutyRestClient
 
@@ -17,7 +18,7 @@ class TestPagerdutyRestClient(TestCase):
         self.__subject = PagerdutyRestClient()
 
     def test_post_should_make_pagerduty_api_call(self):
-        response = Mock(text='{}')
+        response = Mock(text='{}', status_code=200)
         requests.post = MagicMock(return_value=response)
 
         self.__subject.post({'some_key': 'some_value',
@@ -28,7 +29,7 @@ class TestPagerdutyRestClient(TestCase):
                                                           'another_key': 'another_value'}))
 
     def test_post_should_return_the_json_parsed_reponse_text(self):
-        response = Mock(text='{"response_key": "response_value"}')
+        response = Mock(text='{"response_key": "response_value"}', status_code=200)
         requests.post = MagicMock(return_value=response)
 
         result = self.__subject.post({})
@@ -58,4 +59,11 @@ class TestPagerdutyRestClient(TestCase):
         requests.post = MagicMock(return_value=response)
 
         with self.assertRaises(PagerdutyForbiddenException):
+            self.__subject.post({})
+
+    def test_post_should_raise_pagerduty_server_error_on_5XX(self):
+        response = Mock(status_code=543)
+        requests.post = MagicMock(return_value=response)
+
+        with self.assertRaises(PagerdutyServerErrorException):
             self.__subject.post({})
