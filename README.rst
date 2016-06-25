@@ -20,10 +20,37 @@ Examples
 ========
 
 Triggering an alert:
+--------------------
 
 ::
 
     import pagerduty_events_api
 
     service = pagerduty_events_api.PagerdutyService('my_service_key_123')
-    service.trigger('some_alert_description')
+    incident = service.trigger('some_alert_description')
+
+..
+
+    Please note, that the trigger method of a pagerduty_events_api.PagerdutyService object returns a pagerduty_events_api.PagerdutyIncident instance. Through this instance You can retrieve the identifyer of the triggered incident, acknowledge or resolve it later.
+
+Acknowledging an incident:
+--------------------------
+
+::
+
+    import pagerduty_events_api
+
+    incident = pagerduty_events_api.PagerdutyIncident('my_service_key_123', 'my_incident_key456')
+    incident.acknowledge()
+
+Resolving an incident:
+----------------------
+
+::
+
+    import pagerduty_events_api
+
+    incident = pagerduty_events_api.PagerdutyIncident('my_service_key_123', 'my_incident_key456')
+    incident.resolve()
+
+

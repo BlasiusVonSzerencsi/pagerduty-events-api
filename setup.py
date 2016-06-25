@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pagerduty_events_api',
-      version='0.0.1',
+      version='0.1.0',
       description='Python wrapper for Pagerduty Events API',
       url='https://github.com/BlasiusVonSzerencsi/pagerduty-events-api',
       author='Balazs Szerencsi',
