@@ -24,3 +24,13 @@ class TestPagerdutyIncident(TestCase):
         post.assert_called_once_with({'service_key': 'my_service_key',
                                       'event_type': 'acknowledge',
                                       'incident_key': 'my_incident_key'})
+
+    @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
+    def test_resolve_should_make_pagerduty_api_call(self, post):
+        post.return_value = {}
+
+        self.__subject.resolve()
+
+        post.assert_called_once_with({'service_key': 'my_service_key',
+                                      'event_type': 'resolve',
+                                      'incident_key': 'my_incident_key'})

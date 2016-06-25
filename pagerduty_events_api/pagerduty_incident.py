@@ -18,3 +18,10 @@ class PagerdutyIncident:
                    'incident_key': self.__incident_key}
 
         PagerdutyRestClient().post(payload)
+
+    def resolve(self):
+        payload = {'service_key': self.__service_key,
+                   'event_type': 'resolve',
+                   'incident_key': self.__incident_key}
+
+        PagerdutyRestClient().post(payload)
