@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 from unittest.mock import Mock
 
 from pagerduty_events_api.pagerduty_rest_client import PagerdutyRestClient
+from pagerduty_events_api.pagerduty_rest_client import PagerdutyNotFoundException
 
 
 class TestPagerdutyRestClient(TestCase):
@@ -31,3 +32,10 @@ class TestPagerdutyRestClient(TestCase):
         result = self.__subject.post({})
 
         self.assertEqual({'response_key': 'response_value'}, result)
+
+    def test_post_should_raise_pagerduty_not_found_error_on_404(self):
+        response = Mock(status_code=404)
+        requests.post = MagicMock(return_value=response)
+
+        with self.assertRaises(PagerdutyNotFoundException):
+            self.__subject.post({})
