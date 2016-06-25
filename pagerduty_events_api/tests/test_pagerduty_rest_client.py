@@ -7,6 +7,7 @@ from unittest.mock import Mock
 
 from pagerduty_events_api.pagerduty_rest_client import PagerdutyRestClient
 from pagerduty_events_api.pagerduty_rest_client import PagerdutyNotFoundException
+from pagerduty_events_api.pagerduty_rest_client import PagerdutyBadRequestException
 
 
 class TestPagerdutyRestClient(TestCase):
@@ -38,4 +39,13 @@ class TestPagerdutyRestClient(TestCase):
         requests.post = MagicMock(return_value=response)
 
         with self.assertRaises(PagerdutyNotFoundException):
+            self.__subject.post({})
+
+    def test_post_should_raise_pagerduty_bad_request_error_on_400(self):
+        response = Mock(status_code=400,
+                        content=json.dumps({'message': 'Event object is invalid',
+                                            'errors': ['Description is missing or blank']}))
+        requests.post = MagicMock(return_value=response)
+
+        with self.assertRaises(PagerdutyBadRequestException):
             self.__subject.post({})
