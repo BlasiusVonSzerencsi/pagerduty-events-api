@@ -38,33 +38,33 @@ class TestPagerdutyRestClient(TestCase):
         self.assertEqual({'response_key': 'response_value'}, result)
 
     def test_post_should_raise_pagerduty_not_found_error_on_404(self):
-        response = Mock(status_code=404)
-        requests.post = MagicMock(return_value=response)
+        requests.post = self.__post_with_content(404)
 
         with self.assertRaises(PagerdutyNotFoundException):
             self.__subject.post({})
 
     def test_post_should_raise_pagerduty_bad_request_error_on_400(self):
-        response = Mock(status_code=400,
-                        content=json.dumps({'message': 'Event object is invalid',
-                                            'errors': ['Description is missing or blank']}))
-        requests.post = MagicMock(return_value=response)
+        requests.post = self.__post_with_content(400, {'message': 'Event object is invalid',
+                                                       'errors': ['Description is missing or blank']})
 
         with self.assertRaises(PagerdutyBadRequestException):
             self.__subject.post({})
 
     def test_post_should_raise_pagerduty_forbidden_error_on_403(self):
-        response = Mock(status_code=403,
-                        content=json.dumps({'message': 'Forbidden',
-                                            'errors': ['Too many requests please try again later']}))
-        requests.post = MagicMock(return_value=response)
+        requests.post = self.__post_with_content(403, {'message': 'Forbidden',
+                                                       'errors': ['Too many requests please try again later']})
 
         with self.assertRaises(PagerdutyForbiddenException):
             self.__subject.post({})
 
     def test_post_should_raise_pagerduty_server_error_on_5XX(self):
-        response = Mock(status_code=543)
-        requests.post = MagicMock(return_value=response)
+        requests.post = self.__post_with_content(543)
 
         with self.assertRaises(PagerdutyServerErrorException):
             self.__subject.post({})
+
+    def __post_with_content(self, status_code, response_content=None):
+        response = Mock(status_code=status_code,
+                        content=json.dumps(response_content))
+
+        return MagicMock(return_value=response)
