@@ -11,6 +11,6 @@ setup(name='pagerduty_events_api',
       packages=['pagerduty_events_api'],
       zip_safe=False,
       test_suite='nose.collector',
-      tests_require=['nose'],
+      tests_require=['nose', 'ddt'],
       install_requires=['requests'],
       keywords=['pagerduty', 'event', 'api', 'incident', 'trigger', 'acknowledge', 'resolve'])

@@ -1,6 +1,8 @@
 import json
 import requests
 
+from ddt import ddt, data, unpack
+
 from unittest import TestCase
 from unittest.mock import MagicMock
 from unittest.mock import Mock
@@ -13,6 +15,7 @@ from pagerduty_events_api.pagerduty_rest_client import PagerdutyNotFoundExceptio
 from pagerduty_events_api.pagerduty_rest_client import PagerdutyRestClient
 
 
+@ddt
 class TestPagerdutyRestClient(TestCase):
     def setUp(self):
         super().setUp()
@@ -37,33 +40,23 @@ class TestPagerdutyRestClient(TestCase):
 
         self.assertEqual({'response_key': 'response_value'}, result)
 
-    def test_post_should_raise_pagerduty_not_found_error_on_404(self):
-        requests.post = self.__post_with_content(404)
+    @data(
+        (404, None, PagerdutyNotFoundException),
+        (400, {'message': 'Event object is invalid',
+               'errors': ['Description is missing or blank']}, PagerdutyBadRequestException),
+        (403, {'message': 'Forbidden',
+               'errors': ['Too many requests please try again later']}, PagerdutyForbiddenException),
+        (543, None, PagerdutyServerErrorException)
+    )
+    @unpack
+    def test_post_should_raise_error_on_various_error_cases(self, status_code, content, expected_exception):
+        requests.post = self.__post_with_content(status_code, content)
 
-        with self.assertRaises(PagerdutyNotFoundException):
+        with self.assertRaises(expected_exception):
             self.__subject.post({})
 
-    def test_post_should_raise_pagerduty_bad_request_error_on_400(self):
-        requests.post = self.__post_with_content(400, {'message': 'Event object is invalid',
-                                                       'errors': ['Description is missing or blank']})
-
-        with self.assertRaises(PagerdutyBadRequestException):
-            self.__subject.post({})
-
-    def test_post_should_raise_pagerduty_forbidden_error_on_403(self):
-        requests.post = self.__post_with_content(403, {'message': 'Forbidden',
-                                                       'errors': ['Too many requests please try again later']})
-
-        with self.assertRaises(PagerdutyForbiddenException):
-            self.__subject.post({})
-
-    def test_post_should_raise_pagerduty_server_error_on_5XX(self):
-        requests.post = self.__post_with_content(543)
-
-        with self.assertRaises(PagerdutyServerErrorException):
-            self.__subject.post({})
-
-    def __post_with_content(self, status_code, response_content=None):
+    @staticmethod
+    def __post_with_content(status_code, response_content=None):
         response = Mock(status_code=status_code,
                         content=json.dumps(response_content))
 
