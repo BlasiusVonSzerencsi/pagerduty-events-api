@@ -5,6 +5,9 @@
     :target: https://codeclimate.com/github/BlasiusVonSzerencsi/pagerduty-events-api
     :alt: Code Climate
 
+.. image:: https://badge.fury.io/py/pagerduty-events-api.svg
+    :target: https://badge.fury.io/py/pagerduty-events-api
+
 ====================
 PagerDuty Events API
 ====================
