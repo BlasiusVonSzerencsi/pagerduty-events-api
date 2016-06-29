@@ -1,9 +1,12 @@
+from ddt import ddt, data, unpack
+
 from unittest import TestCase
 from unittest.mock import patch
 
 from pagerduty_events_api import PagerdutyIncident
 
 
+@ddt
 class TestPagerdutyIncident(TestCase):
     def setUp(self):
         super().setUp()
@@ -15,22 +18,13 @@ class TestPagerdutyIncident(TestCase):
     def test_get_incident_key_should_return_the_incident_key(self):
         self.assertEqual('my_incident_key', self.__subject.get_incident_key())
 
+    @data('resolve', 'acknowledge')
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
-    def test_acknowledge_should_make_pagerduty_api_call(self, post):
+    def test_should_make_appropriate_pagerduty_api_calls(self, action, post):
         post.return_value = {}
 
-        self.__subject.acknowledge()
+        getattr(self.__subject, action)()
 
         post.assert_called_once_with({'service_key': 'my_service_key',
-                                      'event_type': 'acknowledge',
-                                      'incident_key': 'my_incident_key'})
-
-    @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
-    def test_resolve_should_make_pagerduty_api_call(self, post):
-        post.return_value = {}
-
-        self.__subject.resolve()
-
-        post.assert_called_once_with({'service_key': 'my_service_key',
-                                      'event_type': 'resolve',
+                                      'event_type': action,
                                       'incident_key': 'my_incident_key'})
