@@ -32,8 +32,7 @@ class PagerdutyRestClient:
             raise PagerdutyBadRequestException(error_content['message'])
 
         if response.status_code == 403:
-            error_content = json.loads(response.content)
-            raise PagerdutyForbiddenException(error_content['message'])
+            raise PagerdutyForbiddenException('Too many API calls')
 
         if response.status_code == 404:
             raise PagerdutyNotFoundException('Could not find PagerDuty endpoint')

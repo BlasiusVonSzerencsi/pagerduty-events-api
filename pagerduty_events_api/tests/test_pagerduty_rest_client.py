@@ -44,8 +44,7 @@ class TestPagerdutyRestClient(TestCase):
         (404, None, PagerdutyNotFoundException),
         (400, {'message': 'Event object is invalid',
                'errors': ['Description is missing or blank']}, PagerdutyBadRequestException),
-        (403, {'message': 'Forbidden',
-               'errors': ['Too many requests please try again later']}, PagerdutyForbiddenException),
+        (403, None, PagerdutyForbiddenException),
         (543, None, PagerdutyServerErrorException)
     )
     @unpack
