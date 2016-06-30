@@ -12,15 +12,17 @@ class PagerdutyIncident:
     def get_incident_key(self):
         return self.__incident_key
 
-    def acknowledge(self):
-        self.__send_request_with_event_type('acknowledge')
+    def acknowledge(self, additional_params={}):
+        self.__send_request_with_event_type('acknowledge', additional_params)
 
-    def resolve(self):
-        self.__send_request_with_event_type('resolve')
+    def resolve(self, additional_params={}):
+        self.__send_request_with_event_type('resolve', additional_params)
 
-    def __send_request_with_event_type(self, event_type):
+    def __send_request_with_event_type(self, event_type, additional_params={}):
         payload = {'service_key': self.__service_key,
                    'event_type': event_type,
                    'incident_key': self.__incident_key}
 
-        PagerdutyRestClient().post(payload)
+        PagerdutyRestClient().post(
+            {**additional_params, **payload}
+        )

@@ -43,7 +43,7 @@ Triggering an alert:
 
 ..
 
-    You may also provide additional information to the triggered incident. For further information please visit the `PagerDuty documentation on triggering events
+    You may also provide additional information to the triggered incident. For further information please visit the `PagerDuty documentation on triggering incidents
     <https://developer.pagerduty.com/documentation/integration/events/trigger>`_.
 
 ::
@@ -60,6 +60,15 @@ Acknowledging an incident:
     incident = pagerduty_events_api.PagerdutyIncident('my_service_key_123', 'my_incident_key456')
     incident.acknowledge()
 
+..
+
+    Similarly to triggering, You may provide additional data when acknowledging an incident. For further information please visit the `PagerDuty documentation on acknowledging incidents
+    <https://developer.pagerduty.com/documentation/integration/events/acknowledge>`_.
+
+::
+
+    incident.acknowledge({'description': 'we are working on it...'})
+
 Resolving an incident:
 ----------------------
 
@@ -69,6 +78,15 @@ Resolving an incident:
 
     incident = pagerduty_events_api.PagerdutyIncident('my_service_key_123', 'my_incident_key456')
     incident.resolve()
+
+..
+
+    As seen before in acknowledging, You may provide additional data when acknowledging an incident. For further information please visit the `PagerDuty documentation on resolving incidents
+    <https://developer.pagerduty.com/documentation/integration/events/resolve>`_.
+
+::
+
+    incident.resolve({'description': 'problem fixed ;-)'})
 
 Thrown exceptions:
 ------------------
