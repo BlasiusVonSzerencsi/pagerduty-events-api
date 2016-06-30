@@ -24,6 +24,36 @@ class TestPagerdutyService(TestCase):
                                       'description': 'some_description'})
 
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
+    def test_trigger_should_append_additional_data_to_the_api_call(self, post):
+        post.return_value = {'incident_key': 'my_incident_key'}
+
+        additional_info = {'client': 'my PagerDuty client',
+                           'client_url': 'http://my.cli.ent'}
+
+        self.__subject.trigger('some_description', additional_info)
+
+        post.assert_called_once_with({'service_key': 'my_service_key',
+                                      'event_type': 'trigger',
+                                      'description': 'some_description',
+                                      'client': 'my PagerDuty client',
+                                      'client_url': 'http://my.cli.ent'})
+
+    @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
+    def test_trigger_should_ensure_that_mandatory_data_should_take_precedence_api_call(self, post):
+        post.return_value = {'incident_key': 'my_incident_key'}
+
+        additional_info = {'event_type': 'acknowledge',
+                           'description': 'other description',
+                           'details': {'some_key': 'some_value'}}
+
+        self.__subject.trigger('some_description', additional_info)
+
+        post.assert_called_once_with({'service_key': 'my_service_key',
+                                      'event_type': 'trigger',
+                                      'description': 'some_description',
+                                      'details': {'some_key': 'some_value'}})
+
+    @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
     def test_trigger_should_return_a_pagerduty_incident(self, post):
         post.return_value = {'incident_key': 'my_incident_key'}
 

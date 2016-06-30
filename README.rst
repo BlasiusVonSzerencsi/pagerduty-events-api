@@ -41,6 +41,15 @@ Triggering an alert:
     incident.get_service_key()
     incident.get_incident_key()
 
+..
+
+    You may also provide additional information to the triggered incident. For further information please visit the `PagerDuty documentation on triggering events
+    <https://developer.pagerduty.com/documentation/integration/events/trigger>`_.
+
+::
+
+    incident = service.trigger('some_alert_description', {'client': 'my_very_special_pagerduty_client'})
+
 Acknowledging an incident:
 --------------------------
 
