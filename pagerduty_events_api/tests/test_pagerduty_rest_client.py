@@ -48,8 +48,8 @@ class TestPagerdutyRestClient(TestCase):
         (543, None, PagerdutyServerErrorException)
     )
     @unpack
-    def test_post_should_raise_error_on_various_error_cases(self, status_code, content, expected_exception):
-        requests.post = self.__post_with_content(status_code, content)
+    def test_post_should_raise_error_on_various_error_cases(self, status_code, response_content, expected_exception):
+        requests.post = self.__post_with_content(status_code, response_content)
 
         with self.assertRaises(expected_exception):
             self.__subject.post({})

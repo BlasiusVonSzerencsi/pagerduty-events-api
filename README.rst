@@ -34,7 +34,12 @@ Triggering an alert:
 
 ..
 
-    Please note, that the trigger method of a pagerduty_events_api.PagerdutyService object returns a pagerduty_events_api.PagerdutyIncident instance. Through this instance You can retrieve the identifyer of the triggered incident, acknowledge or resolve it later.
+    Please note, that the trigger method of a pagerduty_events_api.PagerdutyService object returns a pagerduty_events_api.PagerdutyIncident instance. Through this instance You can retrieve the identifier of the triggered incident, acknowledge or resolve it later.
+
+::
+
+    incident.get_service_key()
+    incident.get_incident_key()
 
 Acknowledging an incident:
 --------------------------
@@ -56,4 +61,10 @@ Resolving an incident:
     incident = pagerduty_events_api.PagerdutyIncident('my_service_key_123', 'my_incident_key456')
     incident.resolve()
 
+Thrown exceptions:
+------------------
 
+- **pagerduty_events_api.PagerdutyBadRequestException** indicates that the sent request contained a malformed payload
+- **pagerduty_events_api.PagerdutyForbiddenException** indicates that the rate limit of the PagerDuty API was reached and the request was denied
+- **pagerduty_events_api.PagerdutyNotFoundException** indicates that the PagerDuty events API could not be found, maybe due to DNS error or a breaking change of the API endpoint
+- **pagerduty_events_api.PagerdutyServerErrorException** indicates a processing error on the PagerDuty servers
