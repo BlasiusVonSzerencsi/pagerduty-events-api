@@ -20,7 +20,7 @@ class TestPagerdutyIncident(TestCase):
 
     @data('resolve', 'acknowledge')
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
-    def test_should_make_appropriate_pagerduty_api_calls(self, action, post):
+    def test_resolve_acknowledge_should_make_appropriate_pagerduty_api_calls(self, action, post):
         post.return_value = {}
 
         getattr(self.__subject, action)()
@@ -31,7 +31,7 @@ class TestPagerdutyIncident(TestCase):
 
     @data('resolve', 'acknowledge')
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
-    def test_should_make_appropriate_pagerduty_api_calls(self, action, post):
+    def test_resolve_acknowledge_should_append_additional_data_to_the_api_calls(self, action, post):
         post.return_value = {}
 
         getattr(self.__subject, action)({'description': 'some meaningful description'})
