@@ -40,3 +40,16 @@ class TestPagerdutyIncident(TestCase):
                                       'event_type': action,
                                       'incident_key': 'my_incident_key',
                                       'description': 'some meaningful description'})
+
+    @data('resolve', 'acknowledge')
+    @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
+    def test_resolve_acknowledge_should_give_precedence_to_the_mandaroty_params(self, action, post):
+        post.return_value = {}
+
+        getattr(self.__subject, action)({'event_type': 'some_other_event_type',
+                                         'details': {'some_key': 'some value'}})
+
+        post.assert_called_once_with({'service_key': 'my_service_key',
+                                      'event_type': action,
+                                      'incident_key': 'my_incident_key',
+                                      'details': {'some_key': 'some value'}})
