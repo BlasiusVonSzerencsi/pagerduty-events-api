@@ -1,10 +1,10 @@
 from setuptools import setup
 
 setup(name='pagerduty_events_api',
-      version='0.2.0',
+      version='0.2.1',
       description='Python wrapper for Pagerduty Events API',
       url='https://github.com/BlasiusVonSzerencsi/pagerduty-events-api',
-      download_url='https://github.com/BlasiusVonSzerencsi/pagerduty-events-api/tarball/0.2.0',
+      download_url='https://github.com/BlasiusVonSzerencsi/pagerduty-events-api/tarball/0.2.1',
       author='Balazs Szerencsi',
       author_email='balazs.szerencsi@icloud.com',
       license='MIT',
