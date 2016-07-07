@@ -48,6 +48,14 @@ class TestPagerdutyIncident(TestCase):
                                       'incident_key': 'my_incident_key',
                                       'details': {'some_key': 'some value'}})
 
+    @data('resolve', 'acknowledge')
+    @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
+    def test_resolve_acknowledge_should_raise_error_when_no_incindent_key_was_set(self, action, post):
+        subject = PagerdutyIncident('my_service_key')
+
+        with self.assertRaises(AttributeError):
+            getattr(subject, action)()
+
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
     def test_trigger_should_make_appropriate_pagerduty_api_call(self, post):
         self.__subject.trigger('incident description')

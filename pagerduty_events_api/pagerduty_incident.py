@@ -13,10 +13,10 @@ class PagerdutyIncident:
         return self.__incident_key
 
     def acknowledge(self, additional_params={}):
-        self.__send_request_with_event_type('acknowledge', additional_params)
+        self.__modify_current_incident_with_event('acknowledge', additional_params)
 
     def resolve(self, additional_params={}):
-        self.__send_request_with_event_type('resolve', additional_params)
+        self.__modify_current_incident_with_event('resolve', additional_params)
 
     def trigger(self, description, additional_params={}):
         if self.__incident_key is None:
@@ -37,9 +37,12 @@ class PagerdutyIncident:
 
     def __trigger_existing_incident(self, description, additional_params={}):
         additional_params['description'] = description
-        self.__send_request_with_event_type('trigger', additional_params)
+        self.__modify_current_incident_with_event('trigger', additional_params)
 
-    def __send_request_with_event_type(self, event_type, additional_params={}):
+    def __modify_current_incident_with_event(self, event_type, additional_params={}):
+        if self.__incident_key is None:
+            raise AttributeError('No incident key was provided for {} action'.format(event_type))
+
         payload = {'service_key': self.__service_key,
                    'event_type': event_type,
                    'incident_key': self.__incident_key}
