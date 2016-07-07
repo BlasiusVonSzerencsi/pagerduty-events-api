@@ -18,6 +18,10 @@ class PagerdutyIncident:
     def resolve(self, additional_params={}):
         self.__send_request_with_event_type('resolve', additional_params)
 
+    def trigger(self, description, additional_params={}):
+        additional_params['description'] = description
+        self.__send_request_with_event_type('trigger', additional_params)
+
     def __send_request_with_event_type(self, event_type, additional_params={}):
         payload = {'service_key': self.__service_key,
                    'event_type': event_type,
