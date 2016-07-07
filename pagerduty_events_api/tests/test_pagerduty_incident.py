@@ -75,3 +75,21 @@ class TestPagerdutyIncident(TestCase):
                                       'event_type': 'trigger',
                                       'description': 'incident description',
                                       'incident_key': 'my_incident_key'})
+
+    @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
+    def test_trigger_should_create_new_incident_when_instantiated_with_none(self, post):
+        subject = PagerdutyIncident('my_service_key')
+        subject.trigger('incident description')
+
+        post.assert_called_once_with({'service_key': 'my_service_key',
+                                      'event_type': 'trigger',
+                                      'description': 'incident description'})
+
+    @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
+    def test_trigger_should_set_the_incident_key_of_the_instance_on_new_trigger(self, post):
+        post.return_value = {'incident_key': 'my_new_incident_key'}
+
+        subject = PagerdutyIncident('my_service_key')
+        subject.trigger('incident description')
+
+        self.assertEqual('my_new_incident_key', subject.get_incident_key())

@@ -2,7 +2,7 @@ from pagerduty_events_api.pagerduty_rest_client import PagerdutyRestClient
 
 
 class PagerdutyIncident:
-    def __init__(self, service_key, incident_key):
+    def __init__(self, service_key, incident_key=None):
         self.__service_key = service_key
         self.__incident_key = incident_key
 
@@ -19,6 +19,23 @@ class PagerdutyIncident:
         self.__send_request_with_event_type('resolve', additional_params)
 
     def trigger(self, description, additional_params={}):
+        if self.__incident_key is None:
+            self.__trigger_new_incident(description, additional_params)
+        else:
+            self.__trigger_existing_incident(description, additional_params)
+
+    def __trigger_new_incident(self, description, additional_params={}):
+        payload = {'service_key': self.__service_key,
+                   'event_type': 'trigger',
+                   'description': description}
+
+        incident_data = PagerdutyRestClient().post(
+            self.__append_additional_info_to_payload(payload, additional_params)
+        )
+
+        self.__incident_key = incident_data['incident_key']
+
+    def __trigger_existing_incident(self, description, additional_params={}):
         additional_params['description'] = description
         self.__send_request_with_event_type('trigger', additional_params)
 
@@ -28,5 +45,9 @@ class PagerdutyIncident:
                    'incident_key': self.__incident_key}
 
         PagerdutyRestClient().post(
-            {**additional_params, **payload}
+            self.__append_additional_info_to_payload(payload, additional_params)
         )
+
+    @staticmethod
+    def __append_additional_info_to_payload(mandatory_data, additional_data):
+        return {**additional_data, **mandatory_data}
