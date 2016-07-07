@@ -21,8 +21,6 @@ class TestPagerdutyIncident(TestCase):
     @data('resolve', 'acknowledge')
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
     def test_resolve_acknowledge_should_make_appropriate_pagerduty_api_calls(self, action, post):
-        post.return_value = {}
-
         getattr(self.__subject, action)()
 
         post.assert_called_once_with({'service_key': 'my_service_key',
@@ -32,8 +30,6 @@ class TestPagerdutyIncident(TestCase):
     @data('resolve', 'acknowledge')
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
     def test_resolve_acknowledge_should_append_additional_data_to_the_api_calls(self, action, post):
-        post.return_value = {}
-
         getattr(self.__subject, action)({'description': 'some meaningful description'})
 
         post.assert_called_once_with({'service_key': 'my_service_key',
@@ -44,8 +40,6 @@ class TestPagerdutyIncident(TestCase):
     @data('resolve', 'acknowledge')
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
     def test_resolve_acknowledge_should_give_precedence_to_the_mandaroty_params(self, action, post):
-        post.return_value = {}
-
         getattr(self.__subject, action)({'event_type': 'some_other_event_type',
                                          'details': {'some_key': 'some value'}})
 
@@ -56,8 +50,6 @@ class TestPagerdutyIncident(TestCase):
 
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
     def test_trigger_should_make_appropriate_pagerduty_api_call(self, post):
-        post.return_value = {}
-
         self.__subject.trigger('incident description')
 
         post.assert_called_once_with({'service_key': 'my_service_key',
@@ -67,8 +59,6 @@ class TestPagerdutyIncident(TestCase):
 
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
     def test_trigger_should_append_additional_data_to_the_api_call(self, post):
-        post.return_value = {}
-
         self.__subject.trigger('incident description', {'details': {'some_key': 'some value'}})
 
         post.assert_called_once_with({'service_key': 'my_service_key',
@@ -79,8 +69,6 @@ class TestPagerdutyIncident(TestCase):
 
     @patch('pagerduty_events_api.pagerduty_rest_client.PagerdutyRestClient.post')
     def test_trigger_additional_params_should_not_override_description(self, post):
-        post.return_value = {}
-
         self.__subject.trigger('incident description', {'description': 'some other description'})
 
         post.assert_called_once_with({'service_key': 'my_service_key',
