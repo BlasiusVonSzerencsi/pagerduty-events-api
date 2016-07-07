@@ -1,5 +1,4 @@
 from pagerduty_events_api.pagerduty_incident import PagerdutyIncident
-from pagerduty_events_api.pagerduty_rest_client import PagerdutyRestClient
 
 
 class PagerdutyService:
